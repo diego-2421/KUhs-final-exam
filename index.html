@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>건대부고 2-2 기말 부교재 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 휴대폰 한 손 열람용 단일 칼럼. 목록 → 지문(탭 6개) 두 화면, 해시로 지문 이동 */
+:root{
+  --paper:#f6f7fb; --card:#ffffff; --ink:#1b2340; --muted:#5d6584; --line:#dfe3ef;
+  --accent:#2f4ec4; --accent-soft:#e7ecfd; --mark:#fff1a8; --ok:#1d7a4f; --ok-soft:#e2f4ea; --bad:#b4352f; --bad-soft:#fbe6e4;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-en:"Source Serif 4","Georgia","Times New Roman",serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#11152a; --card:#1a2038; --ink:#e7eaf6; --muted:#a2a9c6; --line:#2d3556;
+    --accent:#8fa6ff; --accent-soft:#25305a; --mark:#4d4420; --ok:#6fd6a1; --ok-soft:#173a2b; --bad:#ff8c84; --bad-soft:#47201e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#11152a; --card:#1a2038; --ink:#e7eaf6; --muted:#a2a9c6; --line:#2d3556;
+  --accent:#8fa6ff; --accent-soft:#25305a; --mark:#4d4420; --ok:#6fd6a1; --ok-soft:#173a2b; --bad:#ff8c84; --bad-soft:#47201e;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.6;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 48px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.top{padding:20px 0 12px;display:grid;gap:4px}
+.eyebrow{font-size:13px;color:var(--muted);font-weight:500}
+h1{font-size:22px;font-weight:700;line-height:1.35}
+.search{margin:12px 0 4px;width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
+.unit{margin-top:20px}
+.unit h2{font-size:14px;color:var(--muted);font-weight:600;letter-spacing:.02em;margin-bottom:8px}
+.list{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:72px 1fr;gap:10px;align-items:start;text-align:left;width:100%;padding:12px 14px;
+  background:var(--card);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.item .no{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.item .tt{font-size:15px;line-height:1.45}
+.empty{color:var(--muted);padding:24px 0}
+/* 지문 화면 */
+.bar{position:sticky;top:0;z-index:5;background:var(--paper);padding:10px 0 0;border-bottom:1px solid var(--line)}
+.barrow{display:flex;align-items:center;gap:8px}
+.icon{border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px;white-space:nowrap}
+.icon[disabled]{opacity:.35;cursor:default}
+.ptitle{flex:1;min-width:0}
+.ptitle .no{font-size:13px;color:var(--accent);font-weight:700}
+.ptitle .tt{font-size:15px;font-weight:600;line-height:1.35}
+.tabs{display:flex;gap:4px;overflow-x:auto;margin-top:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:8px 7px 10px;cursor:pointer;color:var(--muted);font-weight:600;font-size:14px;border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pane{padding-top:16px;display:grid;gap:14px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.lab{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.en{font-family:var(--f-en);font-size:17px;line-height:1.65}
+.sent{display:grid;grid-template-columns:30px 1fr;gap:6px;padding:10px 0;border-bottom:1px dashed var(--line);cursor:pointer;text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%}
+.sent:last-child{border-bottom:0}
+.sn{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;padding-top:3px}
+.key .en{background:linear-gradient(transparent 55%,var(--mark) 55%)}
+.ko{display:none;color:var(--muted);font-size:15px;margin-top:4px;line-height:1.55}
+.showko .ko{display:block}
+.keytag{display:inline-block;font-size:11px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:2px;font-family:var(--f-ui)}
+.summary{border-left:4px solid var(--accent);padding-left:12px}
+.theme{font-size:17px;font-weight:600;line-height:1.5}
+.themeen{font-family:var(--f-en);font-style:italic;color:var(--muted);margin-top:6px}
+.flow{display:grid;gap:0;margin:0;padding:0;list-style:none}
+.flow li{display:grid;grid-template-columns:62px 1fr;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.flow li:last-child{border-bottom:0}
+.rng{font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:14px}
+.stg{font-weight:700;font-size:14px}
+.ul{margin:0;padding-left:18px;display:grid;gap:6px}
+.intro{border-left:4px solid var(--muted);padding-left:12px}
+.chunk{display:grid;gap:6px}
+.chunk .tag{font-weight:700;color:var(--accent)}
+.pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pickbtn{min-width:52px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;font-weight:700}
+.pickbtn[disabled]{opacity:.35}
+.answer{font-size:18px;font-weight:700;letter-spacing:.04em;min-height:28px}
+.btn{border:0;border-radius:10px;padding:10px 16px;background:var(--accent);color:var(--card);font-weight:700;cursor:pointer}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+.res{border-radius:10px;padding:12px 14px}
+.res.ok{background:var(--ok-soft);color:var(--ok)}
+.res.bad{background:var(--bad-soft);color:var(--bad)}
+.res .why{color:var(--ink);margin-top:6px}
+.given{border:2px solid var(--accent);border-radius:10px;padding:12px 14px}
+.gap{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:30px;margin:0 4px;border:1px solid var(--accent);border-radius:8px;
+  background:var(--accent-soft);color:var(--accent);font-weight:700;cursor:pointer;font-family:var(--f-ui);font-size:15px;vertical-align:1px}
+.gap.ok{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.gap.bad{background:var(--bad);border-color:var(--bad);color:var(--card)}
+.gq{display:grid;gap:8px}
+.gq .q{font-family:var(--f-en);font-size:16px;line-height:1.7}
+.opt{display:inline-block;border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:6px;padding:0 8px;margin:2px 2px;cursor:pointer;font-family:var(--f-en);font-size:16px}
+.opt.ok{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.slash{color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+.hide{display:none}
+.voc{display:grid;gap:4px;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer;text-align:left;background:none;border-left:0;border-right:0;border-top:0;width:100%}
+.voc:last-child{border-bottom:0}
+.vw{font-family:var(--f-en);font-weight:600;font-size:17px}
+.vm{font-size:15px}
+.cover .vm,.cover .vd{filter:blur(6px);user-select:none}
+.vd{display:grid;gap:2px;font-size:14px}
+.vd b{font-weight:600;color:var(--muted);margin-right:6px;font-size:13px}
+.vd .en2{font-family:var(--f-en)}
+.foot{margin-top:28px;font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion: no-preference){.tab,.chip,.opt,.gap{transition:background .15s,color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"><p class="empty">본문을 불러오는 중…</p></div>
+<script>
+(function(){
+var DATA=[], app=document.getElementById('app');
+var TABS=[['text','원문'],['flow','주제·흐름'],['order','순서배열'],['insert','문장 삽입'],['gram','어법'],['voc','어휘']];
+var state={tab:'text',showKo:false,vocOpen:false};
+function slug(id){return 'p-'+id.replace(/[^0-9]+/g,'-').replace(/-$/,'');}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function el(html){var t=document.createElement('template');t.innerHTML=html.trim();return t.content;}
+var CIRC='①②③④⑤⑥⑦';
+
+function home(){
+  var q=(state.q||'').trim().toLowerCase();
+  var h='<header class="top"><span class="eyebrow">EBS 2026 올림포스 전국연합학력평가 기출문제집 영어독해(고2)</span>'+
+    '<h1>건대부고 2학년 2학기 기말 부교재 정리 · UNIT 11~20</h1></header>'+
+    '<label for="q" class="eyebrow">지문 검색 (번호·주제·영어 단어)</label>'+
+    '<input id="q" class="search" type="search" placeholder="예: 14-4, 매몰 비용, caffeine" value="'+esc(state.q||'')+'">';
+  var units={},order=[];
+  DATA.forEach(function(p){
+    var hay=(p.id+' '+p.title+' '+p.theme+' '+p.s.map(function(x){return x[0];}).join(' ')).toLowerCase();
+    if(q && hay.indexOf(q)<0) return;
+    var u=p.id.split('-')[0]; if(!units[u]){units[u]=[];order.push(u);} units[u].push(p);
+  });
+  if(!order.length) h+='<p class="empty">찾는 지문이 없습니다. 다른 단어로 검색해 보세요.</p>';
+  order.forEach(function(u){
+    h+='<section class="unit"><h2>UNIT '+u+'</h2><div class="list">';
+    units[u].forEach(function(p){
+      h+='<button class="item" data-go="'+slug(p.id)+'"><span class="no">'+esc(p.id.replace('-',' – '))+'번</span><span class="tt">'+esc(p.title)+'</span></button>';
+    });
+    h+='</div></section>';
+  });
+  h+='<p class="foot">지문을 고르면 원문·주제와 흐름·순서배열·문장 삽입·어법·어휘 연습을 볼 수 있습니다.</p>';
+  app.innerHTML=h;
+  var inp=document.getElementById('q');
+  inp.addEventListener('input',function(){state.q=inp.value;var pos=inp.selectionStart;home();var n=document.getElementById('q');n.focus();try{n.setSelectionRange(pos,pos);}catch(e){}});
+}
+
+function passage(p,idx){
+  var prev=DATA[idx-1],next=DATA[idx+1];
+  var h='<div class="bar"><div class="barrow">'+
+    '<button class="icon" data-go="">목록</button>'+
+    '<div class="ptitle"><div class="no">UNIT '+esc(p.id.replace('-',' – '))+'번</div><div class="tt">'+esc(p.title)+'</div></div>'+
+    '<button class="icon" aria-label="이전 지문" '+(prev?'data-go="'+slug(prev.id)+'"':'disabled')+'>‹</button>'+
+    '<button class="icon" aria-label="다음 지문" '+(next?'data-go="'+slug(next.id)+'"':'disabled')+'>›</button></div>'+
+    '<div class="tabs" role="tablist">';
+  TABS.forEach(function(t){h+='<button class="tab" role="tab" data-tab="'+t[0]+'" aria-selected="'+(state.tab===t[0])+'">'+t[1]+'</button>';});
+  h+='</div></div><div class="pane" id="pane"></div>';
+  app.innerHTML=h;
+  var pane=document.getElementById('pane');
+  ({text:paneText,flow:paneFlow,order:paneOrder,insert:paneInsert,gram:paneGram,voc:paneVoc})[state.tab](p,pane);
+}
+
+function paneText(p,pane){
+  var h='<div class="tools"><button class="chip" id="ko" aria-pressed="'+state.showKo+'">해석 모두 보기</button></div>'+
+    '<p class="note">문장을 누르면 해석이 펼쳐집니다. 형광펜 표시는 주제문입니다.</p><div class="box'+(state.showKo?' showko':'')+'" id="sents">';
+  p.s.forEach(function(x,i){
+    var k=p.key.indexOf(i+1)>=0;
+    h+='<button class="sent'+(k?' key':'')+'"><span class="sn">('+(i+1)+')</span><span><span class="en">'+esc(x[0])+'</span>'+(k?'<span class="keytag">주제문</span>':'')+'<span class="ko">'+esc(x[1])+'</span></span></button>';
+  });
+  h+='</div>';
+  if(p.sum) h+='<div class="box summary"><div class="lab">요약문 [Summary]</div><div class="en">'+esc(p.sum[0])+'</div><div class="ko" style="display:block">'+esc(p.sum[1])+'</div></div>';
+  pane.innerHTML=h;
+  pane.querySelectorAll('.sent').forEach(function(b){b.addEventListener('click',function(){
+    var ko=b.querySelector('.ko');ko.style.display=(getComputedStyle(ko).display==='none')?'block':'none';});});
+  document.getElementById('ko').addEventListener('click',function(){state.showKo=!state.showKo;paneText(p,pane);});
+}
+
+function paneFlow(p,pane){
+  var h='<div class="box"><div class="lab">핵심 주제</div><div class="theme">'+esc(p.theme)+'</div><div class="themeen">'+esc(p.en)+'</div>'+
+    (p.key.length?'<p class="note" style="margin:8px 0 0">주제문: '+p.key.map(function(k){return '('+k+')';}).join(', ')+'</p>':'<p class="note" style="margin:8px 0 0">이야기 글이라 주제문 대신 흐름과 심경 변화를 봅니다.</p>')+'</div>'+
+    '<div class="box"><div class="lab">글의 흐름</div><ol class="flow">';
+  p.flow.forEach(function(f){h+='<li><span class="rng">('+esc(f[0])+')</span><span><span class="stg">'+esc(f[1])+'</span><br>'+esc(f[2])+'</span></li>';});
+  h+='</ol></div><div class="box"><div class="lab">논지 전개 단서 (연결어·지시어)</div><ul class="ul">';
+  p.clues.forEach(function(c){h+='<li>'+esc(c)+'</li>';});
+  h+='</ul></div>';
+  pane.innerHTML=h;
+}
+
+function chunks(p){
+  var c=p.order[0],n=p.s.length,b=[[1,c[0]],[c[0]+1,c[1]],[c[1]+1,c[2]],[c[2]+1,n]];
+  return b.map(function(r){var a=[];for(var i=r[0];i<=r[1];i++)a.push(p.s[i-1][0]);return a.join(' ');});
+}
+function paneOrder(p,pane){
+  var ch=chunks(p),perm=p.order[1],ans=perm.split('').join('-');
+  var lab={};perm.split('').forEach(function(L,i){lab[L]=ch[i+1];});
+  var h='<p class="note">주어진 글 다음에 이어질 순서를 (A)(B)(C)를 눌러 고르세요.</p>'+
+    '<div class="box"><div class="lab">주어진 글</div><div class="en intro">'+esc(ch[0])+'</div></div>';
+  ['A','B','C'].forEach(function(L){h+='<div class="box chunk"><span class="tag">('+L+')</span><div class="en">'+esc(lab[L])+'</div></div>';});
+  h+='<div class="box"><div class="pick">';
+  ['A','B','C'].forEach(function(L){h+='<button class="pickbtn" data-l="'+L+'">('+L+')</button>';});
+  h+='</div><div class="answer" id="seq" aria-live="polite"></div><div class="tools"><button class="btn ghost" id="reset">다시 고르기</button><button class="btn" id="show">정답 보기</button></div></div><div id="out"></div>';
+  pane.innerHTML=h;
+  var seq=[],out=document.getElementById('out'),seqEl=document.getElementById('seq');
+  function draw(){seqEl.textContent=seq.map(function(x){return '('+x+')';}).join(' – ');
+    pane.querySelectorAll('.pickbtn').forEach(function(b){b.disabled=seq.indexOf(b.dataset.l)>=0;});}
+  function result(chosen){
+    var right=chosen&&chosen.join('-')===ans;
+    var h2='<div class="res '+(chosen?(right?'ok':'bad'):'ok')+'"><strong>'+(chosen?(right?'정답입니다.':'다시 생각해 보세요.')+' ':'')+'정답: '+ans.split('-').map(function(x){return '('+x+')';}).join(' – ')+'</strong><ul class="ul why">';
+    p.order[2].forEach(function(w){h2+='<li>'+esc(w)+'</li>';});
+    out.innerHTML=h2+'</ul></div>';
+  }
+  pane.querySelectorAll('.pickbtn').forEach(function(b){b.addEventListener('click',function(){
+    if(seq.length>=3)return;seq.push(b.dataset.l);draw();if(seq.length===3)result(seq);});});
+  document.getElementById('reset').addEventListener('click',function(){seq=[];draw();out.innerHTML='';});
+  document.getElementById('show').addEventListener('click',function(){result(null);});
+}
+
+function paneInsert(p,pane){
+  var s=p.insert[0],gaps=p.insert[1],n=p.s.length,ansGap=s+1;
+  var gi=0,mark={};gaps.forEach(function(g){mark[g]=CIRC[gi++];});
+  var parts=[];
+  for(var i=1;i<=n;i++){
+    if(mark[i]&&i!==s) parts.push('<button class="gap" data-g="'+i+'">'+mark[i]+'</button>');
+    if(i!==s) parts.push(esc(p.s[i-1][0]));
+  }
+  if(mark[n+1]) parts.push('<button class="gap" data-g="'+(n+1)+'">'+mark[n+1]+'</button>');
+  var h='<p class="note">글의 흐름으로 보아 주어진 문장이 들어가기에 가장 적절한 곳을 누르세요.</p>'+
+    '<div class="given en">'+esc(p.s[s-1][0])+'</div><div class="box en">'+parts.join(' ')+'</div>'+
+    '<div class="tools"><button class="btn ghost" id="reset">다시 풀기</button><button class="btn" id="show">정답 보기</button></div><div id="out"></div>';
+  pane.innerHTML=h;
+  var out=document.getElementById('out');
+  function result(g){
+    var right=g===ansGap;
+    out.innerHTML='<div class="res '+(g&&!right?'bad':'ok')+'"><strong>'+(g?(right?'정답입니다. ':'다시 생각해 보세요. '):'')+'정답: '+mark[ansGap]+' (원문의 ('+s+')번 문장)</strong><div class="why">'+esc(p.insert[2])+'</div></div>';
+    pane.querySelectorAll('.gap').forEach(function(b){var v=+b.dataset.g;b.classList.toggle('ok',v===ansGap);b.classList.toggle('bad',v===g&&!right);});
+  }
+  pane.querySelectorAll('.gap').forEach(function(b){b.addEventListener('click',function(){result(+b.dataset.g);});});
+  document.getElementById('show').addEventListener('click',function(){result(null);});
+  document.getElementById('reset').addEventListener('click',function(){out.innerHTML='';pane.querySelectorAll('.gap').forEach(function(b){b.classList.remove('ok','bad');});});
+}
+
+function paneGram(p,pane){
+  var h='<p class="note">괄호 안에서 어법상 알맞은 것을 누르세요. 숫자는 원문의 문장 번호입니다.</p>';
+  p.gram.forEach(function(g,i){
+    var q=g[1],m=q.match(/\[([^\]]+)\]/),qh;
+    if(m){
+      var opts=m[1].split('/').map(function(x){return x.trim();});
+      var btns=opts.map(function(o){return '<button class="opt" data-i="'+i+'" data-o="'+esc(o)+'">'+esc(o)+'</button>';}).join('<span class="slash"> / </span>');
+      var k=q.indexOf(m[0]);qh=esc(q.slice(0,k))+'['+btns+']'+esc(q.slice(k+m[0].length));
+    } else qh=esc(q);
+    h+='<div class="box gq"><div class="lab">('+g[0]+')번 문장</div><div class="q">'+qh+'</div>'+
+      (m?'':'<div><button class="btn ghost" data-reveal="'+i+'">정답 보기</button></div>')+
+      '<div class="res ok hide" id="g'+i+'"><strong>'+esc(g[2])+'</strong><div class="why">'+esc(g[3])+'</div></div></div>';
+  });
+  pane.innerHTML=h;
+  pane.querySelectorAll('.opt').forEach(function(b){b.addEventListener('click',function(){
+    var g=p.gram[+b.dataset.i],right=b.dataset.o===g[2];
+    b.parentNode.querySelectorAll('.opt[data-i="'+b.dataset.i+'"]').forEach(function(o){o.classList.remove('ok','bad');if(o.dataset.o===g[2])o.classList.add('ok');});
+    if(!right)b.classList.add('bad');
+    var r=document.getElementById('g'+b.dataset.i);r.classList.remove('hide');
+    r.className='res '+(right?'ok':'bad');
+    r.querySelector('strong').textContent=(right?'정답입니다. ':'다시 생각해 보세요. 정답: ')+g[2];});});
+  pane.querySelectorAll('[data-reveal]').forEach(function(b){b.addEventListener('click',function(){document.getElementById('g'+b.dataset.reveal).classList.remove('hide');b.remove();});});
+}
+
+function paneVoc(p,pane){
+  var h='<div class="tools"><button class="chip" id="vo" aria-pressed="'+state.vocOpen+'">뜻 모두 보기</button></div><p class="note">단어를 누르면 뜻과 유의어·반의어가 보입니다.</p><div class="box">';
+  p.voc.forEach(function(v){
+    var d='';
+    if(v[2])d+='<div><b>유의어</b><span class="en2">'+esc(v[2])+'</span></div>';
+    if(v[3])d+='<div><b>반의어</b><span class="en2">'+esc(v[3])+'</span></div>';
+    if(v[4])d+='<div><b>주의</b>'+esc(v[4])+'</div>';
+    h+='<button class="voc'+(state.vocOpen?'':' cover')+'"><span class="vw">'+esc(v[0])+'</span><span class="vm">'+esc(v[1])+'</span>'+(d?'<span class="vd">'+d+'</span>':'')+'</button>';
+  });
+  pane.innerHTML=h+'</div>';
+  pane.querySelectorAll('.voc').forEach(function(b){b.addEventListener('click',function(){b.classList.toggle('cover');});});
+  document.getElementById('vo').addEventListener('click',function(){state.vocOpen=!state.vocOpen;paneVoc(p,pane);});
+}
+
+function route(){
+  var h=location.hash.replace('#','');
+  var idx=-1;DATA.forEach(function(p,i){if(slug(p.id)===h)idx=i;});
+  if(idx<0)home();else passage(DATA[idx],idx);
+  window.scrollTo(0,0);
+}
+app.addEventListener('click',function(e){
+  var g=e.target.closest('[data-go]');
+  if(g){var to=g.dataset.go;if(to){if(g.classList.contains('item'))state.tab='text';location.hash=to;}else{history.replaceState(null,'',location.pathname+location.search);route();}return;}
+  var t=e.target.closest('[data-tab]');
+  if(t){state.tab=t.dataset.tab;var h=location.hash.replace('#','');var idx=-1;DATA.forEach(function(p,i){if(slug(p.id)===h)idx=i;});if(idx>=0)passage(DATA[idx],idx);}
+});
+window.addEventListener('hashchange',route);
+fetch('data.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(d){DATA=d;route();})
+  .catch(function(){app.innerHTML='<p class="empty">본문을 불러오지 못했습니다. 페이지를 새로 고쳐 주세요.</p>';});
+})();
+</script>
+</body>
+</html>
