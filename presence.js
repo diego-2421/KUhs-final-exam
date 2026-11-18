@@ -5,10 +5,22 @@ import { getDatabase, ref, set, onDisconnect, onValue, serverTimestamp } from "h
 import { firebaseConfig } from "./firebase-config.js";
 
 const KEY = "kuhs-name";
+const NOTIFY_URL = "https://script.google.com/macros/s/AKfycbwrYEW_swcdHsyzQqnFh0TF7cNrBW6QcTPZJTiMqkIXzcstXBLBH3MqteBUNfespNUW/exec";
+const NKEY = "kuhs-notified";
 let name = null, uid = null, page = window.__page || "지문 목록", connected = false, db = null, sent = "";
 
 function getName() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
 function saveName(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+
+// 선생님 메일 알림: 이 기기에서 학생별 하루 한 번만 요청 (스크립트도 하루 첫 접속만 발송)
+function notifyOnce() {
+  if (!name) return;
+  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Seoul" }).format(new Date());
+  const mark = day + "|" + name;
+  try { if (localStorage.getItem(NKEY) === mark) return; localStorage.setItem(NKEY, mark); } catch (e) {}
+  const body = new URLSearchParams({ name: name, page: window.__page || page || "" });
+  fetch(NOTIFY_URL, { method: "POST", mode: "no-cors", body: body }).catch(function () {});
+}
 
 function push() {
   if (!db || !uid || !name || !connected) return;
@@ -37,7 +49,7 @@ function askName(initial) {
     e.preventDefault();
     const v = input.value.trim();
     if (!v) { wrap.querySelector("#nm-err").textContent = "이름을 입력해야 시작할 수 있습니다."; return; }
-    name = v.slice(0, 20); saveName(name); wrap.remove(); push(); renderBadge();
+    name = v.slice(0, 20); saveName(name); wrap.remove(); push(); renderBadge(); notifyOnce();
   });
 }
 
@@ -55,7 +67,7 @@ function renderBadge() {
 window.reportPage = function (label) { page = String(label).slice(0, 40); push(); };
 
 name = getName();
-if (!name) askName(""); else renderBadge();
+if (!name) askName(""); else { renderBadge(); setTimeout(notifyOnce, 800); }
 
 try {
   const app = initializeApp(firebaseConfig);
