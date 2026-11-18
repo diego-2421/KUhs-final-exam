@@ -24,7 +24,7 @@ function askName(initial) {
   wrap.innerHTML =
     '<form class="nm-box" novalidate>' +
     '<h2 class="nm-h">이름을 입력해 주세요</h2>' +
-    '<p class="nm-p">선생님이 누가 공부하고 있는지 확인하는 데만 쓰이고, 창을 닫으면 기록이 지워집니다.</p>' +
+    '<p class="nm-p">학습 현황을 확인하는 데만 쓰이고, 창을 닫으면 기록이 지워집니다</p>' +
     '<label for="nm-in" class="nm-l">이름</label>' +
     '<input id="nm-in" class="nm-in" maxlength="20" autocomplete="name" placeholder="예: 김민준">' +
     '<p class="nm-err" id="nm-err" aria-live="polite"></p>' +
