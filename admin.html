@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>접속 현황</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* 레이아웃: 선생님 전용 한 화면 — 요약 숫자 1개 + 접속자 목록 */
+:root{
+  --paper:#f6f7fb; --card:#ffffff; --ink:#1b2340; --muted:#5d6584; --line:#dfe3ef; --accent:#2f4ec4; --ok:#1d7a4f; --bad:#b4352f;
+  --f-ui:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#11152a;--card:#1a2038;--ink:#e7eaf6;--muted:#a2a9c6;--line:#2d3556;--accent:#8fa6ff;--ok:#6fd6a1;--bad:#ff8c84;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#11152a;--card:#1a2038;--ink:#e7eaf6;--muted:#a2a9c6;--line:#2d3556;--accent:#8fa6ff;--ok:#6fd6a1;--bad:#ff8c84;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);line-height:1.5;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;display:grid;gap:14px}
+h1{margin:0;font-size:20px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+.btn{border:0;border-radius:10px;padding:10px 16px;background:var(--accent);color:var(--card);font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink);font-weight:500}
+.msg{color:var(--muted);margin:0}
+.msg.err{color:var(--bad)}
+.count{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;align-items:baseline;gap:8px}
+.count b{font-size:32px;font-variant-numeric:tabular-nums}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--ok);display:inline-block}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:15px}
+th{font-size:13px;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.t{font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}
+.hide{display:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="row"><h1>학생 접속 현황</h1><button class="btn ghost hide" id="out" type="button">로그아웃</button></div>
+  <p class="msg" id="msg">로그인 상태를 확인하는 중…</p>
+  <button class="btn hide" id="in" type="button">Google 계정으로 로그인</button>
+  <section id="live" class="hide">
+    <div class="count"><span class="dot" aria-hidden="true"></span><b id="n">0</b><span>명 접속 중</span></div>
+    <p class="msg" style="margin:8px 0">학생이 창을 닫거나 연결이 끊기면 목록에서 자동으로 빠집니다.</p>
+    <table><thead><tr><th>이름</th><th>보고 있는 화면</th><th>마지막 이동</th></tr></thead><tbody id="rows"></tbody></table>
+  </section>
+</main>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
+const $ = (id) => document.getElementById(id);
+let stop = null;
+function show(el, on) { $(el).classList.toggle("hide", !on); }
+function msg(t, err) { $("msg").textContent = t; $("msg").className = "msg" + (err ? " err" : ""); show("msg", !!t); }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function hhmm(ts) { if (typeof ts !== "number") return "-"; const d = new Date(ts); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+
+$("in").addEventListener("click", () => {
+  signInWithPopup(auth, new GoogleAuthProvider()).catch((e) => {
+    msg(e && e.code === "auth/popup-blocked" ? "팝업이 차단되었습니다. 브라우저에서 팝업을 허용한 뒤 다시 눌러 주세요." : "로그인하지 못했습니다. 다시 시도해 주세요.", true);
+  });
+});
+$("out").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+  if (stop) { stop(); stop = null; }
+  if (!user || user.isAnonymous) {
+    msg("선생님 Google 계정으로 로그인하면 지금 접속한 학생을 볼 수 있습니다.");
+    show("in", true); show("out", false); show("live", false); return;
+  }
+  show("in", false); show("out", true); msg(user.email + " 계정으로 로그인했습니다.");
+  stop = onValue(ref(db, "presence"), (snap) => {
+    const list = Object.values(snap.val() || {}).sort((a, b) => String(a.name).localeCompare(String(b.name), "ko"));
+    $("n").textContent = list.length;
+    $("rows").innerHTML = list.length
+      ? list.map((r) => "<tr><td>" + esc(r.name) + "</td><td>" + esc(r.page) + '</td><td class="t">' + hhmm(r.ts) + "</td></tr>").join("")
+      : '<tr><td colspan="3" class="t">지금 접속한 학생이 없습니다.</td></tr>';
+    show("live", true);
+  }, () => {
+    show("live", false);
+    msg(user.email + " 계정에는 열람 권한이 없습니다. 보안 규칙에 넣은 메일과 같은 계정으로 로그인해 주세요.", true);
+  });
+});
+</script>
+</body>
+</html>

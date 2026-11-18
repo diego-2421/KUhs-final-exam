@@ -119,6 +119,15 @@ h1{font-size:22px;font-weight:700;line-height:1.35}
 .vd b{font-weight:600;color:var(--muted);margin-right:6px;font-size:13px}
 .vd .en2{font-family:var(--f-en)}
 .foot{margin-top:28px;font-size:13px;color:var(--muted)}
+.nm-wrap{position:fixed;inset:0;z-index:50;background:rgba(10,14,30,.55);display:grid;place-items:center;padding:16px}
+.nm-box{background:var(--card);color:var(--ink);border-radius:14px;padding:20px;width:100%;max-width:360px;display:grid;gap:8px}
+.nm-h{font-size:18px;font-weight:700}
+.nm-p{margin:0;font-size:14px;color:var(--muted)}
+.nm-l{font-size:13px;font-weight:600;margin-top:6px}
+.nm-in{padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:inherit}
+.nm-err{margin:0;min-height:20px;font-size:13px;color:var(--bad)}
+.nm-btn{border:0;border-radius:10px;padding:12px;background:var(--accent);color:var(--card);font:inherit;font-weight:700;cursor:pointer}
+.nm-badge{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:6;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer}
 @media (prefers-reduced-motion: no-preference){.tab,.chip,.opt,.gap{transition:background .15s,color .15s}}
 </style>
 </head>
@@ -154,6 +163,7 @@ function home(){
     });
     h+='</div></section>';
   });
+  window.__page='지문 목록';if(window.reportPage)window.reportPage(window.__page);
   h+='<p class="foot">지문을 고르면 원문·주제와 흐름·순서배열·문장 삽입·어법·어휘 연습을 볼 수 있습니다.</p>';
   app.innerHTML=h;
   var inp=document.getElementById('q');
@@ -171,6 +181,8 @@ function passage(p,idx){
   TABS.forEach(function(t){h+='<button class="tab" role="tab" data-tab="'+t[0]+'" aria-selected="'+(state.tab===t[0])+'">'+t[1]+'</button>';});
   h+='</div></div><div class="pane" id="pane"></div>';
   app.innerHTML=h;
+  var tl=TABS.filter(function(t){return t[0]===state.tab;})[0][1];
+  window.__page=p.id+' · '+tl;if(window.reportPage)window.reportPage(window.__page);
   var pane=document.getElementById('pane');
   ({text:paneText,flow:paneFlow,order:paneOrder,insert:paneInsert,gram:paneGram,voc:paneVoc})[state.tab](p,pane);
 }
@@ -309,5 +321,6 @@ fetch('data.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.
   .catch(function(){app.innerHTML='<p class="empty">본문을 불러오지 못했습니다. 페이지를 새로 고쳐 주세요.</p>';});
 })();
 </script>
+<script type="module" src="presence.js"></script>
 </body>
 </html>
